@@ -12,7 +12,6 @@
             <Setter Property="Background" Value="#dad7cd"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Foreground" Value="#2b2d42"/>
-            <Setter Property="TextElement.FontFamily" Value="/Fonts/Inter-SemiBold"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -29,47 +28,40 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation To="#f2efe4"
+                                            Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                            Duration="0:0:0.35"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation To="#dad7cd"
+                                            Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                            Duration="0:0:0.50"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
 
+        </Style>
+        <Style TargetType="TextBlock" x:Key="LoginPageTextBlock">
+            <Setter Property="TextElement.FontFamily" Value="Fonts/Inter-SemiBold.ttf"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="1">
-            <Button Style="{StaticResource LoginPageStandartButton}"
-                    Margin="0,-160,0,0">
-                <Button.Content>
-                    <TextBlock Text="Login"
-                               TextWrapping="WrapWithOverflow"
-                               FontSize="24"
-                               FontWeight="SemiBold"
-                        
-                    />
-                </Button.Content>
-            </Button>
-            <Button Style="{StaticResource LoginPageStandartButton}"
-                    >
-                <Button.Content>
-                    <TextBlock Text="Register"
-                               TextWrapping="Wrap"
-                               FontSize="24"
-                               FontWeight="SemiBold"
-                    />
-                </Button.Content>
-            </Button>
-            <Button Style="{StaticResource LoginPageStandartButton}"
-                    Margin="0,160,0,0">
-                <Button.Content>
-                    <TextBlock  Text="Temporary user"
-                                TextWrapping="Wrap"
-                                FontSize="24"
-                                FontWeight="SemiBold"
-                        />
-                </Button.Content>
-            </Button>
-        </Grid>
+        <Frame NavigationUIVisibility="Hidden" x:Name="navFrame"/>
     </Grid>
 </Window>
