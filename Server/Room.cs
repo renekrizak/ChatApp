@@ -26,7 +26,7 @@ namespace Server
             ID = setID();
         }
 
-        //Sets room ID when room is created.
+        //Sets hashed room ID when room is created.
         public string setID()
         {
             var now = DateTime.Now;
@@ -39,6 +39,9 @@ namespace Server
             string hashedID = GenerateUniqueID(8);
             return this.ID = hashedID;
         }
+
+
+
         //ID Generation
         private static readonly RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
         public static string GenerateUniqueID(int length)
