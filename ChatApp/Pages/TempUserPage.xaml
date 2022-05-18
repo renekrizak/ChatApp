@@ -9,7 +9,7 @@
       Title="TempUserPage">
 
     <Grid>
-        <TextBlock>Dorob zajtra</TextBlock>
-        <Button Click="goBack" Width="200" Height="200"/>
+        <TextBlock></TextBlock>
+        <Button Click="goBack" Width="200" Height="200" Content="WORK IN PROGRESS"/>
     </Grid>
 </Page>

@@ -9,6 +9,14 @@ using Dapper;
 using System.Data.SQLite;
 using System.Security.Cryptography;
 
+/* UserDB Structure
+
+);
+ */
+
+/* Room logs structure
+ 
+ */
 
 
 namespace Server

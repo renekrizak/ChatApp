@@ -8,7 +8,10 @@
                 <Setter Property="Background" Value="#dad7cd"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Foreground" Value="#2b2d42"/>
-                <Setter Property="Template">
+                <Setter Property="FontFamily" Value="Fonts/Inter-SemiBold.ttf"/>
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}"
@@ -57,5 +60,16 @@
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
+        <Style TargetType="TextBox" x:Key="LoginPageTextBox">
+            <Setter Property="FontFamily" Value="Fonts/Inter-SemiBold.ttf"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Width" Value="180"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Application.Resources>
 </Application>

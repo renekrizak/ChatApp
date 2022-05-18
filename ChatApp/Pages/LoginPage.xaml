@@ -5,11 +5,54 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ChatApp.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="500" d:DesignWidth="400"
       Title="LoginPage">
 
     <Grid>
-        <TextBlock>Dorob zajtra</TextBlock>
-        <Button Click="goBack" Width="200" Height="200"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="18*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Label
+                FontFamily="Fonts/Inter-SemiBold.ttf"
+                FontSize="32"
+                Foreground="White"
+                FontWeight="SemiBold"
+                Content="Login"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <TextBlock Style="{StaticResource LoginPageTextBlock}"
+                       Text="Username:"
+                       Foreground="White"
+                       Margin="0,-230,70,0"/>
+            <TextBlock Style="{StaticResource LoginPageTextBlock}"
+                       Text="Password:"
+                       Foreground="White"
+                       Margin="0,-70,70,0"/>
+            <TextBox
+                    x:Name="usernameLoginBox"
+                    Margin="0,-160,0,0"
+                    Style="{StaticResource LoginPageTextBox}"
+                    />
+            <TextBox
+                    x:Name="passwordLoginBox"
+                    Margin="0,0,0,0"
+                    Style="{StaticResource LoginPageTextBox}"
+                    />
+            <Button
+                Style="{StaticResource LoginPageStandartButton}"
+                Content="Go back"
+                Margin="0,320,180,0"
+                Click="goBack"/>
+            <Button
+                Style="{StaticResource LoginPageStandartButton}"
+                Content="Login"
+                Margin="0,320,-180,0"
+                Click="loginUser"/>
+        </Grid>
     </Grid>
 </Page>

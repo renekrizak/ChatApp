@@ -29,5 +29,10 @@ namespace ChatApp.Pages
         {
             this.NavigationService.Navigate(new MainPage());
         }
+
+        private void registerNewUser(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
