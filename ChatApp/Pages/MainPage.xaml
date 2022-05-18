@@ -38,22 +38,20 @@
             <Button Style="{StaticResource LoginPageStandartButton}"
                     Margin="0,160,0,0"
                     Click="goToTempUserPage">
-                
+
                 <Button.Content>
                     <TextBlock  Text="Temporary user"
                                 Style="{StaticResource LoginPageTextBlock}"
                         />
                 </Button.Content>
             </Button>
+            
         </Grid>
         <Grid Grid.Row="2">
-            <Label
-                FontFamily="Fonts/Inter-SemiBold.ttf"
-                FontSize="24"
-                Foreground="White"
-                Content="Made By René Križák"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"/>
+            <Separator Margin="0,-80,0,0"></Separator>
+            <TextBlock Style="{StaticResource LoginPageTextBlock}"
+                       Text="Made by: Rene Krizak"
+                       Foreground="White"/>
         </Grid>
     </Grid>
 </Page>

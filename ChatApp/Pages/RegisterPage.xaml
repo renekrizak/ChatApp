@@ -17,7 +17,7 @@
         <Grid Grid.Row="0">
             <Label
                 FontFamily="Fonts/Inter-SemiBold.ttf"
-                FontSize="32"
+                FontSize="28"
                 Foreground="White"
                 FontWeight="SemiBold"
                 Content="Register"
