@@ -14,14 +14,14 @@ namespace Server
 {
     class Room
     {
-        public string Name;
+        private string Password;
         public int Port;
-        public string ID;
+        private string ID;
         static private int _InternalCounter = 0;
 
-        public Room(string name)
+        public Room(string password)
         {
-            Name = name;
+            Password = password;
             Port = 11000;
             ID = setID();
         }
@@ -39,9 +39,6 @@ namespace Server
             string hashedID = GenerateUniqueID(8);
             return this.ID = hashedID;
         }
-
-
-
         //ID Generation
         private static readonly RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
         public static string GenerateUniqueID(int length)

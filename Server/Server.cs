@@ -65,7 +65,11 @@ namespace Server
 
     class SocketListener
     {
-        public static void StartListening()
+		private static string LoadConnectionString(string id = "Default")
+		{
+			return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+		}
+		public static void StartListening()
         {
 
         }
