@@ -16,7 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="8*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.25*"/>
         </Grid.RowDefinitions>
         <Border Grid.Column="1"
                 Grid.ColumnSpan="2"
@@ -36,10 +36,11 @@
                 Grid.Column="1">
             <TextBox Background="Transparent"
                      BorderThickness="4"
-                     FontSize="32"
+                     FontSize="34"
                      TextWrapping="WrapWithOverflow"
                      Text=""
-                     Foreground="White">
+                     Foreground="White"
+                     VerticalContentAlignment="Center">
                 
             </TextBox>
         </Border>

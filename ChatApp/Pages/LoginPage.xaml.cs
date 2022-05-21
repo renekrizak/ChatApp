@@ -32,7 +32,8 @@ namespace ChatApp.Pages
 
         private void loginUser(object sender, RoutedEventArgs e)
         {
-            
+            Client user = new Client();
+            user.Show();
         }
     }
 }
