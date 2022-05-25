@@ -18,35 +18,35 @@ using System.Threading;
  */
 
 /* CREATE TABLE "User" (
-	"UserID"	INTEGER NOT NULL UNIQUE,
+	"UserID"	TEXT NOT NULL UNIQUE,
 	"Username"	TEXT NOT NULL UNIQUE,
 	"Password"	TEXT NOT NULL,
 	"Email"	TEXT NOT NULL,
-	PRIMARY KEY("UserID" AUTOINCREMENT)
+	PRIMARY KEY("UserID")
 );
  */
 
 /*CREATE TABLE "Room" (
 	"RoomID"	TEXT NOT NULL UNIQUE,
-	"RoomPWD"	INTEGER NOT NULL,
+	"RoomPWD"	TEXT NOT NULL,
 	PRIMARY KEY("RoomID")
 );
 */
 
 /*CREATE TABLE "UserRooms" (
-	"UserID"	INTEGER NOT NULL,
+	"UserID"	TEXT NOT NULL,
 	"RoomID"	TEXT NOT NULL,
 	FOREIGN KEY("UserID") REFERENCES "User"("UserID")
 );
  */
 
 /*CREATE TABLE "RoomLogs" (
-	"UserID"	INTEGER NOT NULL,
+	"UserID"	TEXT NOT NULL,
 	"Time"	TEXT NOT NULL,
 	"Message"	TEXT NOT NULL,
 	"RoomID"	TEXT NOT NULL,
-	FOREIGN KEY("RoomID") REFERENCES "Room"("RoomID"),
-	FOREIGN KEY("UserID") REFERENCES "User"("UserID")
+	FOREIGN KEY("UserID") REFERENCES "User"("UserID"),
+	FOREIGN KEY("RoomID") REFERENCES "Room"("RoomID")
 );
  */
 
@@ -54,7 +54,6 @@ using System.Threading;
 namespace Server
 {
      
-	//object for reading client data async
 	public class StateObject
     {
 		//recv buffer size
@@ -69,7 +68,6 @@ namespace Server
 		//client socket
 		public Socket workSocket = null;
     }
-
 	public class AsynchronousSocketListener
     {
 
@@ -132,7 +130,6 @@ namespace Server
         {
 			String content = String.Empty;
 
-
 			//retrieves state object and handler socekt from async state object
 			StateObject state = (StateObject)ar.AsyncState;
 			Socket handler = state.workSocket;
@@ -190,6 +187,159 @@ namespace Server
 			return ConfigurationManager.ConnectionStrings[id].ConnectionString;
 		}
 
+		
+
+		//Checks if user alredy exists in the database, if he does returns false and user will be prompted to choose another username
+		private bool checkIfUserExists(string username)
+        {
+			SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
+			SQLiteCommand cmd = conn.CreateCommand();
+			conn.Open();
+			SQLiteDataReader read;
+			cmd.CommandText = "SELECT Username from USER";
+			read = cmd.ExecuteReader();
+			read.Read();
+            if (Convert.ToString(read["Username"]) == username)
+            {
+				return false;
+            }
+			return true;
+
+        }
+
+		//UserID generation
+		static private int _InternalCounter;
+		public string setID()
+		{
+			var now = DateTime.Now;
+			var days = (int)(now - new DateTime(2000, 1, 1)).TotalDays;
+			var seconds = (int)(now - DateTime.Today).TotalSeconds;
+
+			var counter = _InternalCounter++ % 100;
+
+			string nums = days.ToString("00000") + seconds.ToString("00000") + counter.ToString("00");
+			string hashedID = GenerateUniqueID(16);
+			return hashedID;
+		}
+		//ID Generation
+		private static readonly RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
+		public static string GenerateUniqueID(int length)
+		{
+			int bufferSize = (length * 6 + 7) / 8;
+
+			var buffer = new byte[bufferSize];
+			random.GetBytes(buffer);
+			return Convert.ToBase64String(buffer).Substring(0, length);
+		}
+
+		public string registerNewUser(string userInput)
+		{
+			//this part extracts username, password and email while registering new user, ik this is dumb solution
+			string username = "";
+			string password = "";
+			string email = "";
+			string userID = setID();
+			int lastPos = 0;
+			int count = 0;
+			for (int i = 0; i < 2; i++)
+            {
+				while(true)
+                {
+                    if (userInput[lastPos] != ':' || userInput[lastPos] != ':')
+                    {
+						lastPos++;
+						if(count == 0)
+                        {
+							username += userInput[lastPos];
+                        }
+						else if(count == 1)
+                        {
+							password += userInput[lastPos];
+                        }
+						else
+                        {
+							email += userInput[lastPos];
+                        }
+                    }
+					count++;
+					break;
+                }
+            }
+			if(!checkIfUserExists(username))
+            {
+                /*Prompt client to choose another username, low prio task do later*/
+            }
+            else
+            {
+				//writes all the info into the db and generates user id
+				SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
+				SQLiteCommand cmd = conn.CreateCommand();
+				conn.Open();
+				cmd.Parameters.Add(new SQLiteParameter("@UserID", userID));
+				cmd.Parameters.Add(new SQLiteParameter("@Username", username));
+				cmd.Parameters.Add(new SQLiteParameter("@Password", password));
+				cmd.Parameters.Add(new SQLiteParameter("@Email", email));
+				cmd.CommandText = "INSERT INTO User(UserID, Username, Password, Email) VALUES(@userID, @Username, @Password, @Email)";
+				cmd.ExecuteNonQuery();
+				return userID;
+			}
+			return "";
+		}
+
+		public string loginExistingUser(string userInput)
+        {
+			string username = "";
+			string password = "";
+			int lastPos = 0;
+			int count = 0;
+
+			//extracts username and password from client packet
+			for(int i = 0; i < 1; i++)
+            {
+				while(true)
+                {
+                    if (userInput[lastPos] != ':' || userInput[lastPos] != '<')
+                    {
+						lastPos++;
+						if(count == 0)
+                        {
+							username += userInput[lastPos];
+                        }
+						else if(count == 1)
+                        {
+							password += userInput[lastPos];
+                        }
+                    }
+					count++;
+					break;
+                }
+            }
+			SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
+			SQLiteCommand cmd = conn.CreateCommand();
+			conn.Open();
+			cmd.CommandText = "SELECT COUNT(*) FROM User";
+			int numberOfRows = Convert.ToInt32(cmd.ExecuteScalar());
+			SQLiteDataReader read;
+			cmd.CommandText = "SELECT Username, Password FROM User";
+			read = cmd.ExecuteReader();
+			while(numberOfRows > 0)
+            {
+				read.Read();
+				if(username == Convert.ToString(read["Username"]) && password == Convert.ToString(read["Password"]))
+                {
+					cmd.CommandText = "SELECT UserID FROM User WHERE Username=" + username;
+					string userID = Convert.ToString(cmd.ExecuteScalar());
+					return userID;
+                }
+				if(numberOfRows == 1)
+                {
+					/*Tell user that he entered wrong credentials or the user doesnt exist*/
+                }
+				numberOfRows--;
+            }
+			return "";
+        }
+		
 		public static void Main(string[] args)
 		{
 			StartListening();

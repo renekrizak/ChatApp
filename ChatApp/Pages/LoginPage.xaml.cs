@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ChatApp.Pages
 {
@@ -32,8 +35,21 @@ namespace ChatApp.Pages
 
         private void loginUser(object sender, RoutedEventArgs e)
         {
-            Client user = new Client();
+            AsynchronousClient.StartUserClient(getLoginFlag(), getLogCredentials());
+            string id = AsynchronousClient.returnUserID();
+            Client user = new Client(id);
             user.Show();
+        }
+
+        private string getLogCredentials()
+        {
+            string creds = usernameLoginBox.Text + ":" + passwordLoginBox.Text + "<EOF>";
+            return creds;
+        }
+        
+        private string getLoginFlag()
+        {
+            return "LOG";
         }
     }
 }

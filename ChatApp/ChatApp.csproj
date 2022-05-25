@@ -89,6 +89,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\AsyncClient.cs" />
     <Compile Include="Pages\Client.xaml.cs">
       <DependentUpon>Client.xaml</DependentUpon>
     </Compile>

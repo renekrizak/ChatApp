@@ -19,7 +19,7 @@ namespace ChatApp.Pages
     /// </summary>
     public partial class Client : Window
     {
-        public Client()
+        public Client(string ID)
         {
             InitializeComponent();
         }

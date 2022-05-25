@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ChatApp.Pages
 {
@@ -25,6 +28,7 @@ namespace ChatApp.Pages
             InitializeComponent();
         }
 
+
         private void goBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new MainPage());
@@ -32,8 +36,22 @@ namespace ChatApp.Pages
 
         private void registerNewUser(object sender, RoutedEventArgs e)
         {
-            Client user = new Client();
+            AsynchronousClient.StartLogRegClient(getRegFlag(), getRegCredantials());
+            string id = AsynchronousClient.returnUserID();
+            Client user = new Client(id);
             user.Show();
         }
+
+        private string getRegFlag()
+        {
+            return "REG";
+        }
+
+        private string getRegCredantials()
+        {
+            string result = usernameRegisterBox.Text + ":" + passwordRegisterBox.Text + ":" + emailRegisterBox.Text + "<EOF>";
+            return result;
+        }
+
     }
 }

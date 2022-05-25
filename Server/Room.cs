@@ -22,7 +22,6 @@ namespace Server
         public Room(string password)
         {
             Password = password;
-            Port = 11000;
             ID = setID();
         }
 
