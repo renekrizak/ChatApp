@@ -27,8 +27,6 @@ namespace ChatApp.Pages
         {
             InitializeComponent();
         }
-
-
         private void goBack(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new MainPage());

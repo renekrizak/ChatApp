@@ -186,27 +186,6 @@ namespace Server
 		{
 			return ConfigurationManager.ConnectionStrings[id].ConnectionString;
 		}
-
-		
-
-		//Checks if user alredy exists in the database, if he does returns false and user will be prompted to choose another username
-		private bool checkIfUserExists(string username)
-        {
-			SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
-			SQLiteCommand cmd = conn.CreateCommand();
-			conn.Open();
-			SQLiteDataReader read;
-			cmd.CommandText = "SELECT Username from USER";
-			read = cmd.ExecuteReader();
-			read.Read();
-            if (Convert.ToString(read["Username"]) == username)
-            {
-				return false;
-            }
-			return true;
-
-        }
-
 		//UserID generation
 		static private int _InternalCounter;
 		public string setID()
@@ -265,28 +244,19 @@ namespace Server
 					break;
                 }
             }
-			if(!checkIfUserExists(username))
+			if(!Queries.checkIfUserExists(username))
             {
                 /*Prompt client to choose another username, low prio task do later*/
             }
             else
             {
 				//writes all the info into the db and generates user id
-				SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
-				SQLiteCommand cmd = conn.CreateCommand();
-				conn.Open();
-				cmd.Parameters.Add(new SQLiteParameter("@UserID", userID));
-				cmd.Parameters.Add(new SQLiteParameter("@Username", username));
-				cmd.Parameters.Add(new SQLiteParameter("@Password", password));
-				cmd.Parameters.Add(new SQLiteParameter("@Email", email));
-				cmd.CommandText = "INSERT INTO User(UserID, Username, Password, Email) VALUES(@userID, @Username, @Password, @Email)";
-				cmd.ExecuteNonQuery();
-				return userID;
+				return Queries.registerQuery(userID, username, password, email);
 			}
 			return "";
 		}
 
-		public string loginExistingUser(string userInput)
+		private string loginExistingUser(string userInput)
         {
 			string username = "";
 			string password = "";
@@ -314,30 +284,8 @@ namespace Server
 					break;
                 }
             }
-			SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
-			SQLiteCommand cmd = conn.CreateCommand();
-			conn.Open();
-			cmd.CommandText = "SELECT COUNT(*) FROM User";
-			int numberOfRows = Convert.ToInt32(cmd.ExecuteScalar());
-			SQLiteDataReader read;
-			cmd.CommandText = "SELECT Username, Password FROM User";
-			read = cmd.ExecuteReader();
-			while(numberOfRows > 0)
-            {
-				read.Read();
-				if(username == Convert.ToString(read["Username"]) && password == Convert.ToString(read["Password"]))
-                {
-					cmd.CommandText = "SELECT UserID FROM User WHERE Username=" + username;
-					string userID = Convert.ToString(cmd.ExecuteScalar());
-					return userID;
-                }
-				if(numberOfRows == 1)
-                {
-					/*Tell user that he entered wrong credentials or the user doesnt exist*/
-                }
-				numberOfRows--;
-            }
-			return "";
+			return Queries.loginQuery(username, password);
+			
         }
 		
 		public static void Main(string[] args)
